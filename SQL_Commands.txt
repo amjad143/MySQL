@@ -1,0 +1,665 @@
+                                      SQL-COMMANDS(5)
+
+WHAT IS SQL?
+->Microsoft SQL server is a relational database managment system(RDBMS)devlop by MICROSOFT
+->SQL is used to intract with RDBMS
+->Microsoft's own implementation of SQL is called Transact-SQL (T-SQL)
+
+They are 5 types:
+1. DQL :Data Quary Language
+2. DDL :Data Definition language
+3. DML :Data Manipulation language
+4. DCL :Data Control language
+5. TCL :Transaction control language.
+
+1. DATA QUARY LANGUAGE:
+-->Retrive or fetch the data from the database
+-->Only have access to read the data from databases
+ ===>("SELECT" is the only command that comes under DQL)
+
+2. DATA DEFINATION LANGUAGE (DDL) :
+--> Defines or changes the structure of the tabel like(CREATING,DELETING, ALTERING)
+-->Auto-commited,permenently saves all the changes in the database
+-->Here are some commands that come under DDL
+    ===>(CREATE,ALTER,DROP,TRUNCATE)
+
+3. DATA MANIPULATION LANGUAGE (DML) :
+-->Commmand that are used to modify the database
+-->Not auto-commited,we can rollback to stable conditions
+-->Here are some commands that come under DML
+   ===>(INSERT,UPDATE,DELETE)
+
+4. DATA CONTROL LANGUAGE (DCL) :
+-->Grant and take back authority from any database user.
+-->Control the acces to data and responsibilities of user
+-->Here are some commands that come under DCL
+  ===>(GRANT,REVOKE)
+
+5. TRANSACTION CONTROL LANGUAGE (TCL) :
+-->Control the transaction(modifications)made on the database
+-->Can only be used with commands that are not auto committed i.e,DML commands
+-->Here are some commands that come under TCL.
+   ====>(COMMIT,ROLLBACK,SAVEPOINT)
+
+
+             Creating DataBases and Tabels while using "SQL"
+
+
+1. Numerical Data Types : These are stored in DataBase columns.
+
+a. Exact Numerical :types have their precision and scale preserved
+ex: All Integer type,DECIMAL
+
+Ex: Numerical_(Signed_Integer) :
+   TYPE        STOREGE(bytes)     MINIMUN_VAL(sin)       MAX_VAL(signed)
+1. TINYINT         1                   -128                    127
+2. SMALLINT        2                   -32768                 32767
+3. MEDIUMINT       3                  -8388608               8388607
+4. INT             4                 -2147483648           2147483647
+5. BIGINT          8                     -2^63                 2^63-1
+
+Ex: Numerical_(Integer-Unsigned) : <reomoves negative range adds into postive>
+
+   TYPE        STOREGE(bytes)     MINIMUN_VAL(sin)       MAX_VAL(signed)
+1. TINYINT         1                     0                    255
+2. SMALLINT        2                     0                   65535
+3. MEDIUMINT       3                     0                  16777215
+4. INT             4                     0                 4294967295
+5. BIGINT          8                     0                    2^64-1
+
+EX: Numerical_(Decimal) : <it store a decimal value of fixed length>
+
+Syn : DECIMAL(p,s) = Fixed Length Floating types
+P(precision) = it stands for total no of values on both sides
+S(scale)     = the no of digits after the point
+
+NOTE : Parameter S(Scale) can only be specified if P(precision) is specified and scale 
+must always be less than or equal to the precision. "DEC","NUMERIC","FIXED" Data Types
+are similar to DECIMAL.
+
+b. Approximate Numerical : types have their precision but with a Floating scale.
+ex: FLOAT,DOUBLE
+
+-->Minimum and Maximum values of Exact numerical can be estimated but it cannot for 
+Approximate numericals.
+
+EX : Aproximate Numerical : FLOAT
+.FLOAT and DOUBLE are used to store the floating point numbers
+.FLOAT contains 4 bytes with maximum 7 digits after the decimal
+.DOUBLE consumes 8 bytes with maimum 15 digits after decimal
+.FLOAT/DOUBLE in SQL are used to store very large or very small values.
+
+EX : INT : 87000000000000 -> 8.7e13 -> 8.7*10^13 ->87000000000000
+   FLOAT : 87000000000001 -> 8.7000000000001e13  ->8.7000000e13
+(FLOAT cannot handle morethan 7 digits last 5 removed) ->87000000000000
+
+
+2. STRING Data Type : Used to store sequences of characters.
+
+a. CHAR : is a fixed length string range b/w 1 and 255
+
+b. VARCHAR : variable length string b/w 1 and 255 it same as "CHAR"
+-> Used Dynamic memory allocation method to adjust its length in simple terms it keeps an
+extra space always redy for the next byte of space.
+-> We must define the length argument while creating a VARCHAR filed  else it "Throw ERROR"
+
+c. BINARY and VARBINARY :these are similar to "CHAR" and "VARCHAR" respectively.
+-> They store binary string rather than normal strings.So when you insert a normal string
+into BINARY data types it converts them into BINARY before storing. ex: BINARY(4)
+-> VARBINARY adjust to the bytes of string inserted using dynamic memory allocation,the
+rules hold the same as VARCHAR.
+
+d. BLOB : is similar to VARBINARY full form is "Binary Large Objects"
+-> Used to store large corpus of Binary objects bigger than what BINARY and VARBINAY supprt
+====>BLOB Data Type:
+      BLOBtype                   Maximum size
+1.    TINYBLOB                      255 bytes
+2.     BLOB                       65,535 bytes
+3.   MEDIUMBLOB                  16,777,215 byte
+4.    LONGBLOB                  4,294.967,295 bytes
+--> 4.29 Billion byes sum upto 4.29GB which huge for an individual object.
+
+e. TEXT : is similar to VARCHAR,they are of Variable length and they can store large string
+lengths compared to CHAR and VARCHAR.
+=====> TEXT Data Type :
+           TEXT type                       Maximum Chars
+1.        TINYTEXT                           255 chars
+2.          TEXT                            65,535 chars
+3.        MEDIUMTEXT                       16,777,215 char
+4.         LONGTEXT                       4,294,967,295 char
+--> TEXT is similar to VARCHAR, they are of variable length and they can store large string
+lengths compared to CHAR and VARCHAR
+--> We will mostly be using CHAR or VARCHAR to store our string values,but if were instres
+in storing large corpus to text like books we could look into data types as well.
+
+3. DATE-TIME Data type : Used to store Dates and Specific times.
+
+=> DATE : It stores in Date 'yyyy-mm-dd' ex: 2020-06-10
+=> TIME : It stores in Time 'hh:mm:ss'  ex: 12:30:06
+=> DATETIME : it combine both Date-Time 'yyyy-mm-dd hh:mm:ss'  ex : 2020-06-10 12:30:06
+=> YEAR : It stores year 'yyyy'  ex : 2020
+
+4. CONSTRAINTS : These are rules enforced on the data columns of a tables
+->Used to limit the type of data that can go into table,also ensure the accuracy and reliability
+of the data in the data base.Constrains be either column or table level.
+Ex : 
+a. NOTNULL : are missing values that are not inserted inthe table,By default a column can hold
+NULL values but by specifing NOT NULL constraint,we can be sure that a particular column or
+columns cannot have NULL values.
+
+b. UNIQUE : Constraints prevents two records from having identical values in a column,it can
+allow 'NULL' values to be inserted  Ex : 'Adhar'
+
+c. PRIMARY KEY : Which uniquely identifies each record in the table,Primarykey must contains
+unique values and cannot have NULL values in it.
+-->A Table can have only one primary key, which may consists of single or multiple fields,
+which multiple fields are used as a PrimaryKey,they are called a CompositeKey.
+
+d. CHECK : It enabels a condition to check the value being into a record,if the condition evaluate
+to be false ,isn't enterd into the tabel ex: Age >17
+
+e. DEFAULT : When you forget to insert a value into the column it inserts the value as a 'NULL'
+but while creating the table if we specify the DEFAULT constraints then it takes the DEFAULT value.
+
+f. AUTO_INCREMENT : It allows a unique number to be generated automatically when a new record is inserted
+into a table,By default the intial value of AUTO_INCREMENT would be 1 and will increase 1 after
+every insertion.
+
+
+5. FOREGIN KEY : 
+A Foregin Key is a column or a combination of columns whose values match a Primary Key
+in a diffrent table and is used to link two tabels together.it is also called as Reference key.
+
+
+                               PosgreSQL
+
+--> General purpose and Object-relational data-base managment system.
+1.  T0 upload a data in Posgrequal :
+--> Crate zip folder in .tar formate
+--> Create a 'temp' folder in local disk 'C-drive' and paste the .tar folder
+--> open "SQL Shell"
+-->create a database <postgres=#><CREATE DATABASE "filename">;
+====> CREATE DATABASE
+
+2.   Open a command prompt:
+---> Navigate to "cd-drive" type <cd..> + <cd..>
+--->it will open like "c:\>"
+---> next locate where my postgre sql download
+--->open "pc" -->click on LocalDisk"c"--> click on "ProgramFiles"--->click "PostgreSQL"
+--->click on "13"-->click on "bin"--->copy the "directory path"
+---> open the "cmd"-->type <cd "paste directory path">
+---> it will locate to directory path and "cls" to clear screen
+---> To load the data into the path type 
+<pg_restore -U postgres -d "nameofthefile" -d "database_filename" drivepath\nameofthefile.tar>
+<pg_restore -U postgres -d amjad c:\temp\dvdrental.tar> press enter
+----> enter your "password" it loaded the files to check
+
+3. Open pgAdmin :
+--->login the database open the file that you uploaded <dvdrentals>
+---> click on "schemas" + click on <Tabels> to check the data
+---> check the <Tools> click on <Querry tools> any path as added or not
+---> Click on "Schemas" + "Tools" + "Query Tool" to search the tabels
+
+4. To add a tabel in "database_folder"
+---> Open pgadmi click on 'amjad' right click "quert tool" it will create "query editor"
+ A.  Creating a Table in a Database :   
+CREATE TABLE weather (
+  city        varchar(80),                         
+  temp_lo     int,          --low temperature
+  temp_hi     int,          --how temperature
+  prcp        real,         --precipitation
+  date        date                          
+);
+
+(OR)
+CREATE TABLE cities (
+	name         varchar(80),
+	location     point
+);
+
+B. To Insert single line insertion in a Table:
+Ex :
+INSERT INTO weather(filename) 
+VALUES ('San Francisco', 46, 50, 0.25, '2017-11-24');(5columns)
+(or)
+INSERT INTO weather (city, temp_lo,temp_hi,prcp,date) 
+VALUES ('San Francisco', 41, 48, 0.50, '2018-11-24');
+(or)	
+INSERT INTO weather (date,city,temp_hi,temp_lo) 
+VALUES ('1994-11-29','Hayward',54,37);
+
+C. To create new collum for "Math-caliculation" :
+SELECT city, (temp_hi+temp_lo)/2 AS temp_avg, date FROM weather;
+--->To select from particular and particular colum with avg value display
+EX:
+SELECT * FROM weather
+WHERE city = 'San Francisco' AND prcp > 0.0;
+--->To check from particular column by displaying "unique" names
+SELECT DISTINCT city FROM weather
+ORDER BY city;
+
+5.  COMPARISON Operator : 
+(=, <>, !=, >, >=, <, <=, IN()(matches value in list,IS NULL,
+BETWEEN(range), LIKE(pattren matching with wild cards% and_))
+
+1. WHERE claus use as filter to filter "rows"
+syn : =
+SELECT col1,col2 
+FROM table_name;
+WHERE conditions;
+ex: 
+SELECT * 
+FROM customer
+WHERE store_id=2;
+
+2. != or <> are same :
+ex : <>
+SELECT *
+FROM city
+WHERE city <> 'Abu Dhabi';   <insted of "AbuDhabi" it displays all>
+
+3. BETWEEN : selecting the "range" b/w the column rows(it displays 'int')
+syn :
+SELECT col_name
+FROM table_name
+WHERE col_name BETWEEN val1,val2; 
+EX :
+SELECT customer_id,payment_id,amount
+FROM payment
+WHERE amount BETWEEN 0 AND 8;
+
+
+4. NOT BETWEEN : it displays txt,dates b/w range of the col and rows
+syn :
+SELECT col_name
+FROM table_name
+WHERE col_name NOT BETWEEN val1,val2;
+ex:
+SELECT customer_id,payment_id,amount
+FROM payment
+WHERE amount NOT BETWEEN 0 AND 8;
+
+5. OR : return record matching any specified condition
+(filter record based on more than one condition)
+syn :
+SELECT col_names
+FROM table_name
+WHERE condition1 OR condition2..
+ex:
+SELECT *
+FROM city
+WHERE city ='Abu Dhabi' OR city = 'London';
+
+6. AND :Matching all specified conditions(filter record more than one condition)
+syn :
+SELECT col_name
+FROM table_name
+WHERE condition1 AND condition2
+ex:
+SELECT *
+FROM city
+WHERE city ='Abu Dhabi' AND city = 'London';
+
+7. AND|OR : it can be used in SELECT,INSERT,UPDATE,DELETE
+(and used parenthesis() when combining)
+ex :
+SELECT *
+FROM city
+WHERE (country_id=69 AND city='Zaria')
+OR city_id =589;
+
+8. LIKE Operator : it used to query data by matching technique
+(%wildcard allows you to match string of any length characters including zero)
+(_wild card allows you to match a single character)
+
+syn :
+SELECT col1,col2
+FROM table_nam;
+WHERE column LIKE pattren;
+ex :
+SELECT first_name,last_name
+FROM customer
+WHERE first_name LIKE 'A%';   <which starts with 'A'>
+EX:
+SELECT first_name,last_name
+FROM customer
+WHERE first_name LIKE '%a';   <Which ends with 'a'>
+EX: 
+SELECT first_name,last_name
+FROM customer
+WHERE first_name LIKE '_her%'; <Which displays b/w names>
+
+9. IN : Specify or check against multiple values in a WHERE clause
+syn :
+SELECT col_name
+FROM table_name
+WHERE col_name IN(val1,val2);
+(or)
+SELECT col_name
+FROM table_name
+WHERE col_name IN(SELECT);
+EX:
+SELECT customer_id,rental_id,return_date
+FROM rental
+WHERE customer_id IN(1,2)
+ORDER BY return_date ASC;     <it displays by ascending order>
+EX : 
+To check particular row numbers
+SELECT customer_id,rental_id,return_date
+FROM rental
+WHERE rental_id IN(320,76,2128,5636)
+ORDER BY return_date DESC;  <it displays in decending oreder>
+
+10. NOT : Return records if condition specified is not TRUE
+Syn :
+SELECT col_name
+FROM table_name
+WHERE NOT condition;
+Ex :  
+SELECT *
+FROM inventory
+WHERE NOT store_id=1; <its displays rather than "1">
+
+11. LIMIT : Get a subset of row returned by a query
+(get the no of highest or lowest items in table ex: top 10 expensive films)
+Syn :
+SELECT*
+FROM table_name
+ORDER BY film_id  <it displays columns in order>
+LIMIT n;  <it displays no of columns to displaced>
+(AND)
+SELECT*
+FROM table_name
+LIMIT n OFFSET m;
+(or)
+ex:
+SELECT film_id,title,release_year
+FROM film
+ORDER BY film_id
+LIMIT 4 OFFSET 3; <it displays (noof_col) from wher to (display_no)>
+
+
+12. UNION Operator : It displays multiple quires into single result(remove all duplicates)
+(Both quires must return same no of colms,th corresponding col in quires have compactable data types)
+Syn :
+SELECT col1,col2
+FROM table1
+UNION
+SELECT COL1,COL2
+FROM table2;
+EX :
+SELECT customer_id
+FROM customer
+UNION
+SELECT customer_id
+FROM payment
+ORDER BY customer_id; <Merge two tables and given single output and remove "duplicates>
+
+13. UNION ALL Operator: 
+It result multiple queries into single result(doent remove DUPLICATE)
+(Both return same no colms,the quires have compactable data type)
+Syn :
+SELECT col1,col2
+FROM tabel1
+UNION ALL
+SELECT col1,col2
+FROM tabel2
+ex:
+SELECT customer_id
+FROM customer
+UNION ALL
+SELECT customer_id
+FROM payment
+ORDER BY customer_id;
+
+14. INTERSECT Operator :(used to combine 2 or more SELECT statments into single result)
+(the INSERT operator return all rows in both result sets,the no col apper must be same)
+(The data types of the columns must be compatible)
+Syn :
+SELECT col1,col2
+FROM tabel1
+INSERT
+SELECT col1,col2
+FROM tabel2;
+Ex :
+SELECT store_id
+FROM customer
+INTERSECT
+SELECT store_id
+FROM staff;
+
+15. EXCEPT Operator :
+(Return the result set of two or more queries)
+(return rows in first query not present in output of the second query)
+(Return distinct rows from the first(left) query not in output of second(right)query)
+(The no of columns and their order must be same in both queries)
+(The data types of the respective columns must be compatible)
+Syn :
+SELECT col1,col2
+FROM tabel1
+WHERE conditionA
+EXCEPT
+SELECT col1,col2
+FROM tabel2
+WHERE conditionB
+EX :
+SELECT film_id,title
+FROM film
+ORDER BY title;     <selecting data from the first table>
+SELECT DISTINCT inventory.film_id,title 
+FROM inventory      <adding second column by replacing the first table data>
+INNER JOIN film ON film.film_id = inventory.film_id
+ORDER BY title;
+(OR)
+SELECT film_id,title
+FROM film
+EXCEPT
+SELECT
+DISTINCT inventory.film_id,title
+FROM inventory
+INNER JOIN film ON film.film_id = inventory.film_id
+ORDER BY title;
+
+2. AGGREGATE Functions : (AVG(),COUNT(),MAX(),MIN(),SUM())
+-->It perform caliculations on a set of rows and return single row.
+-->Can be used in SELECT,HAVING and GROUP BY clauses.
+
+1. AVG() : Can be used in SELECT,GROUP BY,and HAVING clauses(ignore NULL values)
+Syn :
+AVG(column)
+ex:
+SELECT 
+ROUND(AVG(replacement_cost),2) avg_replacement_cost
+FROM film;
+(AND)
+SELECT
+customer.customer_id,first_name,last_name,to_char(AVG(amount),'999D99') AS average_amount
+FROM payment
+INNER JOIN customer ON customer.customer_id = payment.customer_id
+GROUP BY
+customer.customer_id
+ORDER BY
+customer_id;  <adding one tabele to another tabel by GROUPBY)
+(AND)
+SELECT
+customer.customer_id,first_name,last_name,to_char(AVG(amount),'999D99') AS average_amount
+FROM payment
+INNER JOIN customer ON customer.customer_id = payment.customer_id
+GROUP BY
+customer.customer_id
+HAVING
+AVG(amount) > 5
+ORDER BY
+customer_id;  <if you want to check more than 5>
+
+2. COUNT() : Return no of rows that match a specific condition of a query.
+Syn :
+SELECTCOUNT(*)FROM table_name; <it will count all columns count>
+Ex :
+SELECT
+COUNT(*)
+FROM film
+(and)
+SELECT COUNT(*) drama_films
+FROM film
+INNER JOIN film_category USING(film_id)  /*inner join new column using(old_colm)*/
+INNER JOIN category USING(category_id)
+WHERE category_id = 7                    <there are no of drama films to be checked>
+(and)
+SELECT customer_id,
+COUNT (customer_id)    /*creating a new folder*/
+FROM payment
+GROUP BYcustomer_id
+HAVING COUNT (customer_id)>40;
+
+3. MAX() : Return the maximum value in a set of values.
+Syn :
+MAX(expression)
+ex:
+SELECT MAX(replacement_cost)
+FROM film
+(AND)
+SELECT film_id,title,replacement_cost
+FROM film
+WHERE replacement_cost = (SELECT MAX(replacement_cost)FROM film)
+ORDER BY title;
+(and)
+SELECT *
+FROM payment
+WHERE amount = (SELECT MAX (amount) FROM payment);
+(and)
+SELECT customer_id,MAX(amount)
+FROM payment
+GROUP BY customer_id;
+(and)
+SELECT customer_id,MAX(amount)
+FROM payment
+GROUP BY customer_id
+HAVING MAX (amount) > 8.99
+ORDER BY max;
+
+4. MIN() : Return the minimum value.
+Syn : 
+SELECT MIN(col)
+FROM table;
+Ex:
+SELECT 
+MIN(replacement_cost)
+FROM film;
+(and)
+SELECT film_id,title,replacement_cost
+FROM film
+WHERE replacement_cost=(SELECT MIN(replacement_cost)FROM film)
+ORDER BY title;
+(and)
+SELECT *
+FROM payment
+WHERE amount = (SELECT MIN (amount)FROM payment);
+(and)
+SELECT customer_id, MIN (amount)
+FROM payment
+GROUP BY 
+customer_id;
+(and)
+SELECT customer_id, MIN (amount)
+FROM payment
+GROUP BY customer_id
+HAVING MIN(amount) < 8.99;
+	
+4. SORTING DATA with ORDER BY :
+->Sorting Data returned by SELECT Statment
+Syn :
+SELECT col1,col2
+FROM table_name;
+ORDER BY
+col1 ASC,
+col2 DESC;
+EX :
+SELECT first_name,last_name
+FROM customer
+ORDER BY last_name DESC;
+(and)
+SELECT first_name,last_name
+FROM customer
+ORDER BY last_name ASC;
+
+5. GROUPING DATA by GROUP BY clause :
+-->Used to divide rows returned from a SELECT statment into groups.
+-->You can apply aggreate function e.g: SUM and COUNT
+Syn :
+SELECT col1,aggregate_function(col_2)
+FROM table1
+GROUP BY column_1;
+ex:
+SELECT customer_id
+FROM payment
+GROUP BY customer_id;
+(and)
+SELECT customer_id,SUM (amount)
+FROM payment
+GROUP BY customer_id
+ORDER BY sum;
+(and)
+SELECT customer_id,SUM (amount)
+FROM payment
+GROUP BY customer_id
+ORDER BY SUM (amount) DESC;
+(and)
+SELECT staff_id,COUNT(payment_id)
+FROM payment
+GROUP BY staff_id;
+
+5. HAVING clause :
+->used to in conjunction with GROUP BY clause
+->used filter group rows that do not satisfy a specified condition.
+Syn :
+SELECT col1 aggregate_function(col_2)
+FROM tablename
+GROUP BY col_1
+HAVING condition;
+Ex :
+SELECT customer_id,SUM (amount)
+FROM payment
+GROUP BY customer_id;
+(and)
+SELECT customer_id,SUM (amount)
+FROM payment
+GROUP BY customer_id
+HAVING SUM(amount)>200;	
+
+                        MYSQL DISTINCT :
+Used within an SQL statment to remove duplicates from a query result.
+(the Distinct keyword doesnt remove the duplicates from the tabel,
+it only removes duplicates from the result of the output querry)
+ex: By using WHERE Claus
+SELECT DISTINCT first_name
+FROM sakila.actor
+WHERE first_name like 'An%';
+Ex: By using COUNT
+SELECT COUNT(DISTINCT first_name)
+FROM sakila.actor
+WHERE first_name like 'An%';
+Ex: for Multiple columns
+SELECT DISTINCT first_name,last_name
+FROM sakila.actor
+WHERE first_name like 'An%';
+
+
+
+
+
+CREATE DATABASE Amjad;
+
+--->create file:
+CREATE TABLE CustomerDetails(
+ID SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+FirstName VARCHAR(30),
+LastName VARCHAR(30),
+Age TINYINT UNSIGNED NOT NULL,
+Gender CHAR(6) NOT NULL,
+ProductBought TINYINT UNSIGNED NOT NULL DEFAULT 0,
+PRIMARY KEY (ID),
+CHECK (Age > 12)
+);
+
+

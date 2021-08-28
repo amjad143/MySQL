@@ -1,0 +1,473 @@
+-- Creating Tables
+
+create table weather (
+       city       varchar(80),
+       temp_high  int,            -- Temperature
+       temp_lo    int,           -- Lowpresure
+       prep       real,           -- Preception
+       date       date
+);
+
+-- Inserting Values
+
+insert into weather (city,temp_high,temp_lo,prep,date)
+values ('Andhra',48,26,0.80,'2021-08-03');
+
+
+insert into weather(city,temp_high,temp_lo,prep,date)
+values('Telengana',47,21,0.75,'2021-08-03');
+
+
+insert into weather(city,temp_high,temp_lo,prep,date)
+values('Mumbai',47,28,0.75,'2021-08-03');
+
+insert into weather(city,temp_high,temp_lo,prep,date)
+values('Karnataka',36,16,0.50,'2021-08-03');
+
+
+select * 
+from weather;
+
+-- Caliculating Average of a new column and modifing a Table
+
+SELECT city, (temp_high+temp_lo)/2 AS temp_avg, date 
+FROM weather;
+
+-- WHERE : Clause used to Filter the Rows
+-- Comparision Operators
+
+select *
+from customer;
+
+select *
+from customer
+where store_id=2;     -- To display particular collumn from the table
+
+-- "<> or !=" both symbols are same
+
+select *
+from city;
+
+select *
+from city
+where city <> 'Abu Dhabi';
+
+select *
+from inventory
+where store_id != 1;
+
+-- Between clause
+
+select *
+from payment;
+
+select customer_id,payment_id,amount
+from payment
+where amount between 0 and 8;
+
+
+select customer_id,payment_id,amount
+from payment
+where amount between 0 and 8
+order by amount;
+
+
+
+select customer_id,payment_id,amount
+from payment
+where amount not between 0 and 8;
+
+
+select customer_id,payment_id,amount
+from payment
+where amount not between 0 and 8
+order by amount;
+
+-- OR matching specified condition
+
+select *
+from city
+where city = 'Abu Dhabi' or city = 'London';
+
+
+-- AND Specified matching condition
+
+select *
+from city
+where city = 'Abha' and city = 'London';
+
+-- AND|OR :It can be used to 'SELECT','INSERT','UPDATE' and 'DELETE' conditions
+
+select *
+from city
+where country_id = 69;
+
+
+select *
+from city
+where country_id = 69 and city = 'Zaria';
+
+
+select *
+from city
+where (country_id = 69 and city = 'Zaria') or city_id = 589;
+
+
+-- LIKE : Operator is used to query data by matching teachinque
+
+select *
+from customer;
+
+select first_name,last_name
+from customer;
+
+
+select first_name,last_name
+from customer
+where first_name like 'A%';
+
+
+
+select first_name,last_name
+from customer
+where first_name like '%a';
+
+
+
+select first_name,last_name
+from customer
+where first_name like '_her%';
+
+-- IN : To check in a specific or Multiple columns.
+
+select *
+from rental
+
+
+select customer_id,rental_id,return_date
+from rental
+where customer_id in(1)
+order by return_date desc;
+
+
+
+select customer_id,rental_id,return_date
+from rental
+where customer_id in(1,2)
+
+
+select customer_id,rental_id,return_date
+from rental
+where customer_id in(1,2)
+order by customer_id;
+
+
+select customer_id,rental_id,return_date
+from rental
+where customer_id in(1,2)
+order by return_date asc;
+
+
+
+select customer_id,rental_id,return_date
+from rental
+where rental_id in(320,76,2128,5636)
+order by return_date desc;
+
+-- NOT : Return the records if condition is specified NOT True
+
+SELECT *
+FROM inventory
+WHERE NOT store_id=1;
+
+
+-- LIMIT :Returns the no of highest or lowest iteams returns in the table
+
+
+
+SELECT film_id,title,release_year
+FROM film
+ORDER BY film_id
+LIMIT 4;
+
+SELECT film_id,title,release_year
+FROM film
+ORDER BY film_id
+LIMIT 4 OFFSET 3;
+
+--  UNION OPERATOR : It displays multiple Queries into single row "Remove duplicete from both queries"
+
+select customer_id
+from customer
+
+select customer_id
+from payment
+
+SELECT customer_id
+FROM customer
+UNION
+SELECT customer_id
+FROM payment
+ORDER BY customer_id;
+
+
+-- UNION ALL : It display multiple queries into single row and it "Doesnt Remove Duplicates"
+
+
+SELECT customer_id
+FROM customer
+UNION ALL
+SELECT customer_id
+FROM payment
+ORDER BY customer_id;
+
+
+-- INSERT : Operator is used to combine 2 or more select statments into single result
+
+select store_id
+from customer
+
+
+select store_id
+from staff
+
+
+SELECT store_id
+FROM customer
+INTERSECT
+SELECT store_id
+FROM staff;
+
+
+
+
+-- EXCEPT Operator :
+-- (Return the result set of two or more queries)
+-- (return rows in first query not present in output of the second query)
+-- (Return distinct rows from the first(left) query not in output of second(right)query)
+-- (The no of columns and their order must be same in both queries)
+-- (The data types of the respective columns must be compatible)
+
+
+select film_id,title
+from film
+order by title
+
+select film_id
+from inventory
+
+
+SELECT film_id,title
+FROM film
+ORDER BY title;     -- <selecting data from the first table>
+SELECT DISTINCT inventory.film_id  -- Distinct key word removes duplicate vales and diplays unique
+FROM inventory 
+order by film_id
+
+
+SELECT film_id,title
+FROM film
+ORDER BY title;    -- <selecting data from the first table>
+SELECT DISTINCT inventory.film_id,title 
+FROM inventory     -- <adding second column by replacing the first table data>
+INNER JOIN film ON film.film_id = inventory.film_id
+ORDER BY title;
+-- Diffrence b/w into these equations
+
+SELECT film_id,title
+FROM film
+EXCEPT
+SELECT DISTINCT inventory.film_id,title
+FROM inventory
+INNER JOIN film ON film.film_id = inventory.film_id
+ORDER BY title;
+
+
+
+-- AGGREGATE FUNCTIONS : [AVG(),COUNT(),MIN(),MAX(),SUM()]
+
+-- AVG():It can be used in SELECT,GROUP BY and HAVING caues
+
+select replacement_cost
+from film
+
+
+select avg(replacement_cost)
+from film
+
+select round(avg(replacement_cost))  -- Which displays approximate value
+from film
+
+
+SELECT 
+ROUND(AVG(replacement_cost),2) avg_replacement_cost  -- which displays an extra column with specified name
+FROM film;
+
+-- Extension
+
+select customer_id,amount  -- 14956 Rows
+from payment
+
+select customer_id,first_name,last_name
+from customer
+order by customer_id
+
+select customer.customer_id,first_name,last_name,round(avg(amount),2) as average_amount
+from payment
+inner join customer on customer.customer_id = payment.customer_id  -- It display in numeric
+group by customer.customer_id
+order by customer_id;
+
+SELECT
+customer.customer_id,first_name,last_name,to_char(AVG(amount),'999D99') AS average_amount
+FROM payment
+INNER JOIN customer ON customer.customer_id = payment.customer_id  -- it display in Text
+GROUP BY customer.customer_id
+ORDER BY
+customer_id;  -- <adding one tabele to another tabel by GROUPBY)
+
+
+SELECT
+customer.customer_id,first_name,last_name,to_char(AVG(amount),'999D99') AS average_amount
+FROM payment
+INNER JOIN customer ON customer.customer_id = payment.customer_id
+GROUP BY customer.customer_id
+HAVING AVG(amount) > 5
+ORDER BY customer_id;  -- <if you want to check more than 5>
+
+
+SELECT customer.customer_id,first_name,last_name,ROUND(AVG(amount),2) AS average_amount
+FROM payment
+INNER JOIN customer ON customer.customer_id = payment.customer_id
+GROUP BY customer.customer_id
+HAVING AVG(amount) > 5
+ORDER BY customer_id;  -- <if you want to check more than 5>
+
+-- ROUND : Returns no of rows that matched specific condition
+
+select *
+from film
+
+select count(*)
+from film
+
+select film_id
+from film_category
+
+select count(category_id)
+from category
+
+select count(*) drama_films
+from film
+inner join film_category using(film_id)
+inner join category using(category_id)
+
+SELECT COUNT(*) drama_films
+FROM film
+INNER JOIN film_category USING(film_id)  -- /*inner join new column using(old_colm)*/
+INNER JOIN category USING(category_id)
+WHERE category_id = 7                    <there are no of drama films to be checked>
+
+select customer_id,count(customer_id)
+from payment
+group by customer_id
+order by customer_id
+
+SELECT customer_id,COUNT(customer_id)    -- /*creating a new folder*/
+FROM payment
+GROUP BY customer_id
+HAVING COUNT (customer_id)>40;
+
+
+-- MAX() : Return the maximum value in a set of values.
+
+select replacement_cost
+from film
+
+SELECT MAX(replacement_cost)
+FROM film
+
+select film_id,title,replacement_cost
+from film
+order by film_id
+
+SELECT film_id,title,replacement_cost
+FROM film
+WHERE replacement_cost = (SELECT MAX(replacement_cost)FROM film)
+ORDER BY title;
+
+SELECT *
+FROM payment
+WHERE amount = (SELECT MAX (amount) FROM payment);
+
+SELECT customer_id,MAX(amount)
+FROM payment
+GROUP BY customer_id;
+
+SELECT customer_id,MAX(amount)
+FROM payment
+GROUP BY customer_id
+HAVING MAX (amount) > 8.99
+ORDER BY max;
+
+
+-- MIN() : Return the minimum value.
+
+SELECT MIN(replacement_cost)
+FROM film;
+
+SELECT film_id,title,replacement_cost
+FROM film
+WHERE replacement_cost=(SELECT MIN(replacement_cost)FROM film)
+ORDER BY title;
+
+SELECT *
+FROM payment
+WHERE amount = (SELECT MIN (amount)FROM payment);
+
+SELECT customer_id, MIN (amount)
+FROM payment
+GROUP BY 
+customer_id;
+
+SELECT customer_id, MIN (amount)
+FROM payment
+GROUP BY customer_id
+HAVING MIN(amount) < 8.99;
+
+
+-- GROUPING DATA by GROUP BY clause :
+-- Used to divide rows returned from a SELECT statment into groups.
+-- You can apply aggreate function e.g: SUM and COUNT
+
+SELECT customer_id
+FROM payment
+GROUP BY customer_id;
+
+SELECT customer_id,SUM (amount)
+FROM payment
+GROUP BY customer_id
+ORDER BY sum;
+
+SELECT customer_id,SUM (amount)
+FROM payment
+GROUP BY customer_id
+ORDER BY SUM (amount) DESC;
+
+SELECT staff_id,COUNT(payment_id)
+FROM payment
+GROUP BY staff_id;
+
+
+-- HAVING clause :
+-- used to in conjunction with GROUP BY clause
+-- used filter group rows that do not satisfy a specified condition.
+
+SELECT customer_id,SUM (amount)
+FROM payment
+GROUP BY customer_id;
+
+SELECT customer_id,SUM (amount)
+FROM payment
+GROUP BY customer_id
+HAVING SUM(amount)>200;	

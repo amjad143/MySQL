@@ -1,0 +1,127 @@
+             Creating DataBases and Tabels while using "SQL"
+
+
+1. Numerical Data Types : These are stored in DataBase columns.
+
+a. Exact Numerical :types have their precision and scale preserved
+ex: All Integer type,DECIMAL
+
+Ex: Numerical_(Signed_Integer) :
+   TYPE        STOREGE(bytes)     MINIMUN_VAL(sin)       MAX_VAL(signed)
+1. TINYINT         1                   -128                    127
+2. SMALLINT        2                   -32768                 32767
+3. MEDIUMINT       3                  -8388608               8388607
+4. INT             4                 -2147483648           2147483647
+5. BIGINT          8                     -2^63                 2^63-1
+
+Ex: Numerical_(Integer-Unsigned) : <reomoves negative range adds into postive>
+
+   TYPE        STOREGE(bytes)     MINIMUN_VAL(sin)       MAX_VAL(signed)
+1. TINYINT         1                     0                    255
+2. SMALLINT        2                     0                   65535
+3. MEDIUMINT       3                     0                  16777215
+4. INT             4                     0                 4294967295
+5. BIGINT          8                     0                    2^64-1
+
+EX: Numerical_(Decimal) : <it store a decimal value of fixed length>
+
+Syn : DECIMAL(p,s) = Fixed Length Floating types
+P(precision) = it stands for total no of values on both sides
+S(scale)     = the no of digits after the point
+
+NOTE : Parameter S(Scale) can only be specified if P(precision) is specified and scale 
+must always be less than or equal to the precision. "DEC","NUMERIC","FIXED" Data Types
+are similar to DECIMAL.
+
+b. Approximate Numerical : types have their precision but with a Floating scale.
+ex: FLOAT,DOUBLE
+
+-->Minimum and Maximum values of Exact numerical can be estimated but it cannot for 
+Approximate numericals.
+
+EX : Aproximate Numerical : FLOAT
+.FLOAT and DOUBLE are used to store the floating point numbers
+.FLOAT contains 4 bytes with maximum 7 digits after the decimal
+.DOUBLE consumes 8 bytes with maimum 15 digits after decimal
+.FLOAT/DOUBLE in SQL are used to store very large or very small values.
+
+EX : INT : 87000000000000 -> 8.7e13 -> 8.7*10^13 ->87000000000000
+   FLOAT : 87000000000001 -> 8.7000000000001e13  ->8.7000000e13
+(FLOAT cannot handle morethan 7 digits last 5 removed) ->87000000000000
+
+
+2. STRING Data Type : Used to store sequences of characters.
+
+a. CHAR : is a fixed length string range b/w 1 and 255
+
+b. VARCHAR : variable length string b/w 1 and 255 it same as "CHAR"
+-> Used Dynamic memory allocation method to adjust its length in simple terms it keeps an
+extra space always redy for the next byte of space.
+-> We must define the length argument while creating a VARCHAR filed  else it "Throw ERROR"
+
+c. BINARY and VARBINARY :these are similar to "CHAR" and "VARCHAR" respectively.
+-> They store binary string rather than normal strings.So when you insert a normal string
+into BINARY data types it converts them into BINARY before storing. ex: BINARY(4)
+-> VARBINARY adjust to the bytes of string inserted using dynamic memory allocation,the
+rules hold the same as VARCHAR.
+
+d. BLOB : is similar to VARBINARY full form is "Binary Large Objects"
+-> Used to store large corpus of Binary objects bigger than what BINARY and VARBINAY supprt
+====>BLOB Data Type:
+      BLOBtype                   Maximum size
+1.    TINYBLOB                      255 bytes
+2.     BLOB                       65,535 bytes
+3.   MEDIUMBLOB                  16,777,215 byte
+4.    LONGBLOB                  4,294.967,295 bytes
+--> 4.29 Billion byes sum upto 4.29GB which huge for an individual object.
+
+e. TEXT : is similar to VARCHAR,they are of Variable length and they can store large string
+lengths compared to CHAR and VARCHAR.
+=====> TEXT Data Type :
+           TEXT type                       Maximum Chars
+1.        TINYTEXT                           255 chars
+2.          TEXT                            65,535 chars
+3.        MEDIUMTEXT                       16,777,215 char
+4.         LONGTEXT                       4,294,967,295 char
+--> TEXT is similar to VARCHAR, they are of variable length and they can store large string
+lengths compared to CHAR and VARCHAR
+--> We will mostly be using CHAR or VARCHAR to store our string values,but if were instres
+in storing large corpus to text like books we could look into data types as well.
+
+3. DATE-TIME Data type : Used to store Dates and Specific times.
+
+=> DATE : It stores in Date 'yyyy-mm-dd' ex: 2020-06-10
+=> TIME : It stores in Time 'hh:mm:ss'  ex: 12:30:06
+=> DATETIME : it combine both Date-Time 'yyyy-mm-dd hh:mm:ss'  ex : 2020-06-10 12:30:06
+=> YEAR : It stores year 'yyyy'  ex : 2020
+
+4. CONSTRAINTS : These are rules enforced on the data columns of a tables
+->Used to limit the type of data that can go into table,also ensure the accuracy and reliability
+of the data in the data base.Constrains be either column or table level.
+Ex : 
+a. NOTNULL : are missing values that are not inserted inthe table,By default a column can hold
+NULL values but by specifing NOT NULL constraint,we can be sure that a particular column or
+columns cannot have NULL values.
+
+b. UNIQUE : Constraints prevents two records from having identical values in a column,it can
+allow 'NULL' values to be inserted  Ex : 'Adhar'
+
+c. PRIMARY KEY : Which uniquely identifies each record in the table,Primarykey must contains
+unique values and cannot have NULL values in it.
+-->A Table can have only one primary key, which may consists of single or multiple fields,
+which multiple fields are used as a PrimaryKey,they are called a CompositeKey.
+
+d. CHECK : It enabels a condition to check the value being into a record,if the condition evaluate
+to be false ,isn't enterd into the tabel ex: Age >17
+
+e. DEFAULT : When you forget to insert a value into the column it inserts the value as a 'NULL'
+but while creating the table if we specify the DEFAULT constraints then it takes the DEFAULT value.
+
+f. AUTO_INCREMENT : It allows a unique number to be generated automatically when a new record is inserted
+into a table,By default the intial value of AUTO_INCREMENT would be 1 and will increase 1 after
+every insertion.
+
+
+5. FOREGIN KEY : 
+A Foregin Key is a column or a combination of columns whose values match a Primary Key
+in a diffrent table and is used to link two tabels together.it is also called as Reference key.
